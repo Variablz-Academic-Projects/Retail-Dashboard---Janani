@@ -2,17 +2,44 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import streamlit as st
+from datetime import datetime, timedelta
 
 
 # Import Data
-df = pd.read_excel('data/Online Retail.xlsx',nrows = 50000,
+df = pd.read_excel('data/Online Retail.xlsx', 
                    dtype = {'StockCode':str,'CustomerID':str })         
 
 # Sidebar Controls for Dynamic Dashboard
 with st.sidebar:
     st.subheader('Settings')
 
+    # Filtering Data based on Periods
+    rad_periods = st.radio('Choose Periods', 
+             options= ['Last Week', 'Last Month', 'Last Quarter',
+                       'Last Year', 'All Data'])
+    
+    match(rad_periods):
+
+        case 'Last Week':
+            st.write('Last Week Selected')
+            last_date = df['InvoiceDate'].max()
+            first_date = last_date - timedelta(7)
+            df = df.loc[df['InvoiceDate'].between(first_date, last_date)]
+
+
+        case 'Last Month':
+            st.write('Last Month Selected')
+        case 'Last Quarter':
+            st.write('Last Quarter Selected')
+        case 'Last Year':
+            st.write('Last Year Selected')
+        case _:
+            st.write('All Data Selected')
+
+    
 st.header('Retail Dashboard')
+
+
 
 # Main Dashboard Window
 cols1 = st.columns(3)
